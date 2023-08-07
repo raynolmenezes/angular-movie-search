@@ -32,7 +32,8 @@
                 "glob": "_redirects",
                 "input": "src",
                 "output": "/"
-              }
+              },
+              "_redirects"
             ],
             "styles": [
               "src/styles.scss"
