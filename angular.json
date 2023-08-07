@@ -33,7 +33,7 @@
                 "input": "src",
                 "output": "/"
               },
-              "_redirects"
+              "src/_redirects"
             ],
             "styles": [
               "src/styles.scss"
