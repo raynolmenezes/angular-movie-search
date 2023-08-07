@@ -1,0 +1,19 @@
+<div class="search-container"><input type="text" [(ngModel)]="movietitle" (input)="Search()" placeholder="Search For Movies"/></div>
+<div><input type="checkbox" [(ngModel)]="checkboxstate" (change)="sortbyyear(checkboxstate)" /> Sort By Year</div>
+<div><input type="checkbox" [(ngModel)]="runboxstate" (change)="runtime15(runboxstate)" /> Remove Movies over 150 Mins Runtime</div>
+<div>
+    Genre: <select [(ngModel)]="selectedGenre" style="height: auto;">
+        <option value="" selected>All</option>
+        <option *ngFor="let genre of genrelist" [value]="genre">{{genre}}</option>
+</select>
+</div>
+<ul *ngIf="movies.length > 0">
+    <li *ngFor="let movie of movies | filter:{genre:selectedGenre}; let i = index" [attr.data-index]="i" style="height: auto;">
+        <a [routerLink]="str(movie.id)">
+            <div class="movie-item">
+                <img [src]="movie.posterUrl" (error)="ImgError(i)" />
+                {{ movie.title }}
+            </div>
+        </a>
+    </li>
+</ul>

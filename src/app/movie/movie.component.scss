@@ -1,0 +1,28 @@
+.movie-details {
+    text-align: center;
+  }
+  
+  .movie-details .poster img {
+    width: 300px;
+    height: auto;
+    object-fit: cover;
+    margin: 20px 0;
+  }
+  
+  .movie-details h1 {
+    font-size: 2em;
+    margin: 0;
+  }
+  
+  .movie-details .year {
+    color: #f00; /* Make the year pop with red color, adjust as per your preference */
+    font-size: 1.5em;
+    margin: 0;
+  }
+  
+  .movie-details p {
+    max-width: 600px;
+    margin: 20px auto;
+    font-size: 1em;
+    line-height: 1.5;
+  }
