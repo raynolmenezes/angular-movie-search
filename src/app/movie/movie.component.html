@@ -1,9 +1,10 @@
-<div class="movie-details">
-    <div class="poster">
-      <img [src]="movie.posterUrl"/>
-    </div>
-    <h1>{{movie.title}}</h1>
-    <h3 class="year">{{movie.year}}</h3>
+<div class="movie-card">
+<mat-card class="movie-details">
+  <img mat-card-image [src]="movie.posterUrl">
+  <mat-card-title>{{movie.title}}</mat-card-title>
+  <mat-card-subtitle class="year">{{movie.year}}</mat-card-subtitle>
+  <mat-card-content>
     <p>{{movie.plot}}</p>
-  </div>
-  
+  </mat-card-content>
+</mat-card>
+</div>
