@@ -9,7 +9,8 @@ import { Movie } from '../movie-list/movie-list.component';
 export class MovieComponent implements OnInit {
   @Input() movie!: Movie;
 
-  constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("")
+  }
 }

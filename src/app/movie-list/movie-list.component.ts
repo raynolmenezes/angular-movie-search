@@ -22,7 +22,7 @@ export class MovieListComponent implements OnInit {
   str(arg0: number): string | any[] | null | undefined {
     return arg0.toString();
   }
-  movietitle: string = '';
+  movietitle: string;
   movies: Movie[] = [];
   checkboxstate = false;
   runboxstate = false;

@@ -1,29 +1,41 @@
 <mat-form-field appearance="fill" class="search-container">
-    <mat-label>Search For Movies</mat-label>
-    <input matInput [(ngModel)]="movietitle" (input)="Search()" />
+  <mat-label>Search For Movies</mat-label>
+  <input matInput [(ngModel)]="movietitle" (input)="Search()" />
 </mat-form-field>
 
 <div>
-<mat-checkbox [(ngModel)]="checkboxstate" (change)="sortbyyear(checkboxstate)">Sort By Year</mat-checkbox>
-<mat-checkbox [(ngModel)]="runboxstate" (change)="runtime15(runboxstate)">Remove Movies over 150 Mins Runtime</mat-checkbox>
+  <mat-checkbox [(ngModel)]="checkboxstate" (change)="sortbyyear(checkboxstate)"
+    >Sort By Year</mat-checkbox
+  >
+  <mat-checkbox [(ngModel)]="runboxstate" (change)="runtime15(runboxstate)"
+    >Remove Movies over 150 Mins Runtime</mat-checkbox
+  >
 
-<mat-form-field appearance="fill" class="genre-dropdown">
+  <mat-form-field appearance="fill" class="genre-dropdown">
     <mat-label>Genre</mat-label>
     <mat-select [(value)]="selectedGenre">
-        <mat-option value="">All</mat-option>
-        <mat-option *ngFor="let genre of genrelist" [value]="genre">{{genre}}</mat-option>
+      <mat-option value="">All</mat-option>
+      <mat-option *ngFor="let genre of genrelist" [value]="genre">{{
+        genre
+      }}</mat-option>
     </mat-select>
-</mat-form-field>
+  </mat-form-field>
 </div>
 
 <mat-list class *ngIf="movies.length > 0">
-    <mat-list-item *ngFor="let movie of movies | filter:{genre:selectedGenre}; let i = index" [attr.data-index]="i">
-        <a class="movie-name" [routerLink]="str(movie.id)">
-            <div class="movie-item">
-                <img mat-card-image [src]="movie.posterUrl" (error)="ImgError(i)" />
-                <p mat-line> {{ movie.title }} </p>
-                <p mat-line class="release-year"> {{ movie.year }} </p>
-            </div>
-        </a>
-    </mat-list-item>
+  <mat-list-item
+    *ngFor="
+      let movie of movies | filter : { genre: selectedGenre };
+      let i = index
+    "
+    [attr.data-index]="i"
+  >
+    <a class="movie-name" [routerLink]="str(movie.id)">
+      <div class="movie-item">
+        <img mat-card-image [src]="movie.posterUrl" (error)="ImgError(i)" alt="Movie Poster Image"/>
+        <p mat-line>{{ movie.title }}</p>
+        <p mat-line class="release-year">{{ movie.year }}</p>
+      </div>
+    </a>
+  </mat-list-item>
 </mat-list>
