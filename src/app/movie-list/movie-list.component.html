@@ -1,41 +1,102 @@
-<mat-form-field appearance="fill" class="search-container">
-  <mat-label>Search For Movies</mat-label>
-  <input matInput [(ngModel)]="movietitle" (input)="Search()" />
-</mat-form-field>
+<div class="movie-list-flex-container">
+  <div class="sidenav-container">
+    <mat-drawer-container class="genre-container" autosize>
+      <mat-drawer #drawer class="sidenav" mode="side">
+        <p>Genres</p>
+        <mat-form-field appearance="fill" class="genre-dropdown">
+          <mat-label>Genre</mat-label>
+          <mat-select [(value)]="selectedGenre">
+            <mat-option value="">All</mat-option>
+            <mat-option *ngFor="let genre of genrelist" [value]="genre">{{
+              genre
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-drawer>
 
-<div>
-  <mat-checkbox [(ngModel)]="checkboxstate" (change)="sortbyyear(checkboxstate)"
-    >Sort By Year</mat-checkbox
-  >
-  <mat-checkbox [(ngModel)]="runboxstate" (change)="runtime15(runboxstate)"
-    >Remove Movies over 150 Mins Runtime</mat-checkbox
-  >
-
-  <mat-form-field appearance="fill" class="genre-dropdown">
-    <mat-label>Genre</mat-label>
-    <mat-select [(value)]="selectedGenre">
-      <mat-option value="">All</mat-option>
-      <mat-option *ngFor="let genre of genrelist" [value]="genre">{{
-        genre
-      }}</mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
-
-<mat-list class *ngIf="movies.length > 0">
-  <mat-list-item
-    *ngFor="
-      let movie of movies | filter : { genre: selectedGenre };
-      let i = index
-    "
-    [attr.data-index]="i"
-  >
-    <a class="movie-name" [routerLink]="str(movie.id)">
-      <div class="movie-item">
-        <img mat-card-image [src]="movie.posterUrl" (error)="ImgError(i)" alt="Movie Poster Image"/>
-        <p mat-line>{{ movie.title }}</p>
-        <p mat-line class="release-year">{{ movie.year }}</p>
+      <div class="genre-sidenav-content">
+        <button
+          mat-mini-fab
+          class="mat-elevation-z0"
+          type="button"
+          (click)="drawer.toggle()"
+        >
+          >
+        </button>
       </div>
-    </a>
-  </mat-list-item>
-</mat-list>
+    </mat-drawer-container>
+  </div>
+  <div class="movie-list">
+    <div class="top-movie-screen-content">
+      <div class="flex-search">
+        <mat-form-field appearance="fill" class="search-container">
+          <mat-label>Search From Filtered Movies</mat-label>
+          <input matInput [(ngModel)]="movietitle" (input)="Search()" />
+        </mat-form-field>
+      </div>
+      <div class="filter-condition">
+        <button
+          mat-button
+          (click)="isFilterOpen = !isFilterOpen"
+          type="button"
+          cdkOverlayOrigin
+          #trigger="cdkOverlayOrigin"
+        >
+          <mat-icon fontIcon="filter_alt"></mat-icon>
+        </button>
+        <ng-template
+          cdkConnectedOverlay
+          [cdkConnectedOverlayOrigin]="trigger"
+          [cdkConnectedOverlayOpen]="isFilterOpen"
+        >
+          <ul class="filter-list">
+            <li>
+              <mat-checkbox
+                [(ngModel)]="checkboxstate"
+                (change)="sortbyyear(checkboxstate)"
+                >Sort By Year</mat-checkbox
+              >
+            </li>
+            <li>
+              <mat-checkbox
+                [(ngModel)]="runboxstate"
+                (change)="runtime15(runboxstate)"
+                >Remove Movies over 150 Mins Runtime</mat-checkbox
+              >
+            </li>
+          </ul>
+        </ng-template>
+      </div>
+    </div>
+
+    <div>
+      <h1>Movies</h1>
+    </div>
+
+    <mat-list class *ngIf="movies.length > 0">
+      <mat-list-item
+        *ngFor="
+          let movie of movies | filter : { genre: selectedGenre };
+          let i = index
+        "
+        [attr.data-index]="i"
+        (click)="previewMovieInfo(movie)"
+      >
+        <!-- <a class="movie-name" [routerLink]="str(movie.id)"> -->
+        <a class="movie-name">
+          <div class="movie-item">
+            <img
+              mat-card-image
+              [src]="movie.posterUrl"
+              (error)="ImgError(i)"
+              alt="Movie Poster Image"
+            />
+            <p mat-line>{{ movie.title }}</p>
+            <p mat-line class="release-year">{{ movie.year }}</p>
+          </div>
+        </a>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <app-preview-sidebar [movie]="selectedMovie"></app-preview-sidebar>
+</div>

@@ -1,16 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Movie } from '../movie-list/movie-list.component';
+import { Component, OnInit, Input } from '@angular/core'
+import { Movie } from '../movie-list/movie-list.component'
 
 @Component({
   selector: 'app-movie',
   templateUrl: './movie.component.html',
-  styleUrls: ['./movie.component.scss'],
+  styleUrls: ['./movie.component.scss']
 })
 export class MovieComponent implements OnInit {
-  @Input() movie!: Movie;
+  @Input() movie!: Movie
 
-
-  ngOnInit(): void {
-    console.log("")
+  ngOnInit (): void {
+    console.log('')
   }
 }

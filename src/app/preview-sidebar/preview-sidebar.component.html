@@ -1,0 +1,16 @@
+<div *ngIf="movie" class="movie-preview" (click)="$event.stopPropagation()">
+  <button mat-icon-button class="close-button" (click)="closePreview()">
+    <mat-icon>close-button</mat-icon>
+  </button>
+  <div class="movie-poster">
+    <img [src]="movie.posterUrl" alt="Movie Poster" />
+  </div>
+
+  <div class="movie-title">
+    <h2>{{ movie.title }}</h2>
+  </div>
+
+  <div class="movie-plot">
+    <p>{{ movie.plot }}</p>
+  </div>
+</div>

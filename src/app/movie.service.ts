@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
-import { Movie } from './movie-list/movie-list.component';
-import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core'
+import { Observable, map } from 'rxjs'
+import { Movie } from './movie-list/movie-list.component'
+import { HttpClient } from '@angular/common/http'
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class MovieService {
-  constructor(private http: HttpClient) {}
+  constructor (private readonly http: HttpClient) {}
   // private MOVIE_URL = 'http://localhost:3000/movies';
   // private genre = 'http://localhost:3000/genres';
 
@@ -19,23 +19,33 @@ export class MovieService {
   //   return this.http.get<string[]>(this.genre);
   // }
 
-  private DB_URL = 'assets/db.json';
+  private readonly DB_URL = 'assets/db.json'
 
-  getMoviesfromHttp() {
+  getMoviesfromHttp () {
     return this.http
       .get<{ movies: Movie[] }>(this.DB_URL)
-      .pipe(map((data) => data.movies));
+      .pipe(map((data) => data.movies))
   }
 
-  getGenresfromHttp() {
+  getGenresfromHttp () {
     return this.http
       .get<{ genres: string[] }>(this.DB_URL)
-      .pipe(map((data) => data.genres));
+      .pipe(map((data) => data.genres))
   }
 
-  movie(id: number) {
+  searchMovies (term: string): Observable<Movie[]> {
+    return this.getMoviesfromHttp().pipe(
+      map((movies) =>
+        movies.filter((movie) =>
+          movie.title.toLowerCase().includes(term.toLowerCase())
+        ).slice(0, 5)
+      )
+    )
+  }
+
+  movie (id: number) {
     return this.http
-      .get<{ movies: Movie[]; genres: string[] }>(this.DB_URL)
-      .pipe(map((data) => data.movies.find((movie) => +movie.id === +id)));
+      .get<{ movies: Movie[], genres: string[] }>(this.DB_URL)
+      .pipe(map((data) => data.movies.find((movie) => +movie.id === +id)))
   }
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MovieService } from '../movie.service';
+import { Component, ElementRef, HostListener, OnInit } from "@angular/core";
+import { MovieService } from "../movie.service";
 
 export interface Movie {
   id: number;
@@ -13,10 +13,27 @@ export interface Movie {
   posterUrl: string;
 }
 
+export interface MovieTMDB {
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: number[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+}
+
 @Component({
-  selector: 'app-movie-list',
-  templateUrl: './movie-list.component.html',
-  styleUrls: ['./movie-list.component.scss'],
+  selector: "app-movie-list",
+  templateUrl: "./movie-list.component.html",
+  styleUrls: ["./movie-list.component.scss"],
 })
 export class MovieListComponent implements OnInit {
   str(arg0: number): string | any[] | null | undefined {
@@ -26,10 +43,15 @@ export class MovieListComponent implements OnInit {
   movies: Movie[] = [];
   checkboxstate = false;
   runboxstate = false;
-  selectedGenre = '';
+  selectedGenre = "";
   genrelist: string[];
+  isFilterOpen: boolean = false;
+  selectedMovie: Movie;
 
-  constructor(private movieService: MovieService) {}
+  constructor(
+    private movieService: MovieService,
+    private elementRef: ElementRef
+  ) {}
 
   ngOnInit(): void {
     this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
@@ -40,8 +62,12 @@ export class MovieListComponent implements OnInit {
     });
   }
 
+  previewMovieInfo(movie: Movie): void {
+    this.selectedMovie = movie;
+  }
+
   Search(): void {
-    if (this.movietitle != '') {
+    if (this.movietitle != "") {
       this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
         this.movies = data.filter((movie) =>
           movie.title.toLowerCase().includes(this.movietitle.toLowerCase())
@@ -73,7 +99,7 @@ export class MovieListComponent implements OnInit {
   runtime15(runboxstate) {
     this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
       if (runboxstate) {
-        this.movies = data.filter((movie) => movie.runtime > '150');
+        this.movies = data.filter((movie) => movie.runtime > "150");
       } else {
         this.movies = data;
       }
