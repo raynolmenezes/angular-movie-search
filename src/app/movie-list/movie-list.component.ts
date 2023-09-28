@@ -1,5 +1,6 @@
-import { Component, ElementRef, HostListener, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { MovieService } from "../movie.service";
+
 
 export interface Movie {
   id: number;
@@ -39,19 +40,19 @@ export class MovieListComponent implements OnInit {
   str(arg0: number): string | any[] | null | undefined {
     return arg0.toString();
   }
+  @Input() moviepreview: Movie;
+  
+
   movietitle: string;
   movies: Movie[] = [];
   checkboxstate = false;
   runboxstate = false;
-  selectedGenre = "";
+  selectedGenre: string[];
   genrelist: string[];
   isFilterOpen: boolean = false;
   selectedMovie: Movie;
 
-  constructor(
-    private movieService: MovieService,
-    private elementRef: ElementRef
-  ) {}
+  constructor(private movieService: MovieService) {}
 
   ngOnInit(): void {
     this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
@@ -62,8 +63,8 @@ export class MovieListComponent implements OnInit {
     });
   }
 
-  previewMovieInfo(movie: Movie): void {
-    this.selectedMovie = movie;
+  closePreview() {
+    this.moviepreview = null;
   }
 
   Search(): void {

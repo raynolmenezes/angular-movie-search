@@ -2,101 +2,125 @@
   <div class="sidenav-container">
     <mat-drawer-container class="genre-container" autosize>
       <mat-drawer #drawer class="sidenav" mode="side">
-        <p>Genres</p>
-        <mat-form-field appearance="fill" class="genre-dropdown">
-          <mat-label>Genre</mat-label>
-          <mat-select [(value)]="selectedGenre">
-            <mat-option value="">All</mat-option>
-            <mat-option *ngFor="let genre of genrelist" [value]="genre">{{
-              genre
-            }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <mat-label>Genres</mat-label>
+        <mat-selection-list [multiple]="false" [(ngModel)]="selectedGenre">
+          <mat-list-option value="" selected="true">All</mat-list-option>
+          <mat-list-option *ngFor="let genre of genrelist" [value]="genre">{{
+            genre
+          }}</mat-list-option>
+        </mat-selection-list>
       </mat-drawer>
 
-      <div class="genre-sidenav-content">
-        <button
-          mat-mini-fab
-          class="mat-elevation-z0"
-          type="button"
-          (click)="drawer.toggle()"
-        >
-          >
-        </button>
+      <div class="movie-list-wrapper">
+        <div class="movie-list">
+          <div class="top-movie-screen-content">
+            <div class="flex-search">
+              <mat-form-field appearance="fill" class="search-container">
+                <mat-label>Search From Filtered Movies</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="movietitle"
+                  type="text"
+                  (input)="Search()"
+                />
+              </mat-form-field>
+            </div>
+            <div class="filter-condition">
+              <button
+                mat-button
+                (click)="isFilterOpen = !isFilterOpen"
+                type="button"
+                cdkOverlayOrigin
+                #trigger="cdkOverlayOrigin"
+              >
+                <mat-icon fontIcon="filter_alt"></mat-icon>
+              </button>
+              <ng-template
+                cdkConnectedOverlay
+                [cdkConnectedOverlayOrigin]="trigger"
+                [cdkConnectedOverlayOpen]="isFilterOpen"
+              >
+                <ul class="filter-list">
+                  <li>
+                    <mat-checkbox
+                      [(ngModel)]="checkboxstate"
+                      (change)="sortbyyear(checkboxstate)"
+                      >Sort By Year</mat-checkbox
+                    >
+                  </li>
+                  <li>
+                    <mat-checkbox
+                      [(ngModel)]="runboxstate"
+                      (change)="runtime15(runboxstate)"
+                      >Remove Movies over 150 Mins Runtime</mat-checkbox
+                    >
+                  </li>
+                </ul>
+              </ng-template>
+            </div>
+          </div>
+
+          <div>
+            <div class="genre-sidenav-content">
+              <button
+                mat-mini-fab
+                class="mat-elevation-z0"
+                type="button"
+                (click)="drawer.toggle()"
+              >
+                >
+              </button>
+            </div>
+            <h1>Movies</h1>
+          </div>
+
+          <mat-list class *ngIf="movies.length > 0">
+            <mat-list-item
+              *ngFor="
+                let movie of movies | filter : { genres: selectedGenre };
+                let i = index
+              "
+              [attr.data-index]="i"
+              (click)="moviepreview = movie"
+            >
+              <!-- <a class="movie-name" [routerLink]="str(movie.id)"> -->
+              <a class="movie-name">
+                <div class="movie-item">
+                  <img
+                    mat-card-image
+                    [src]="movie.posterUrl"
+                    (error)="ImgError(i)"
+                  />
+                  <p mat-line>{{ movie.title }}</p>
+                  <p mat-line class="release-year">{{ movie.year }}</p>
+                </div>
+              </a>
+            </mat-list-item>
+          </mat-list>
+        </div>
       </div>
     </mat-drawer-container>
-  </div>
-  <div class="movie-list">
-    <div class="top-movie-screen-content">
-      <div class="flex-search">
-        <mat-form-field appearance="fill" class="search-container">
-          <mat-label>Search From Filtered Movies</mat-label>
-          <input matInput [(ngModel)]="movietitle" (input)="Search()" />
-        </mat-form-field>
-      </div>
-      <div class="filter-condition">
-        <button
-          mat-button
-          (click)="isFilterOpen = !isFilterOpen"
-          type="button"
-          cdkOverlayOrigin
-          #trigger="cdkOverlayOrigin"
-        >
-          <mat-icon fontIcon="filter_alt"></mat-icon>
-        </button>
-        <ng-template
-          cdkConnectedOverlay
-          [cdkConnectedOverlayOrigin]="trigger"
-          [cdkConnectedOverlayOpen]="isFilterOpen"
-        >
-          <ul class="filter-list">
-            <li>
-              <mat-checkbox
-                [(ngModel)]="checkboxstate"
-                (change)="sortbyyear(checkboxstate)"
-                >Sort By Year</mat-checkbox
-              >
-            </li>
-            <li>
-              <mat-checkbox
-                [(ngModel)]="runboxstate"
-                (change)="runtime15(runboxstate)"
-                >Remove Movies over 150 Mins Runtime</mat-checkbox
-              >
-            </li>
-          </ul>
-        </ng-template>
-      </div>
-    </div>
-
-    <div>
-      <h1>Movies</h1>
-    </div>
-
-    <mat-list class *ngIf="movies.length > 0">
-      <mat-list-item
-        *ngFor="
-          let movie of movies | filter : { genre: selectedGenre };
-          let i = index
-        "
-        [attr.data-index]="i"
-        (click)="previewMovieInfo(movie)"
+    <div #preview class="preview-sidebar" ngModel="moviepreview">
+      <div
+        *ngIf="moviepreview"
+        class="movie-preview"
+        (click)="$event.stopPropagation()"
       >
-        <!-- <a class="movie-name" [routerLink]="str(movie.id)"> -->
-        <a class="movie-name">
-          <div class="movie-item">
-            <img
-              mat-card-image
-              [src]="movie.posterUrl"
-              (error)="ImgError(i)"
-              alt="Movie Poster Image"
-            />
-            <p mat-line>{{ movie.title }}</p>
-            <p mat-line class="release-year">{{ movie.year }}</p>
-          </div>
-        </a>
-      </mat-list-item>
-    </mat-list>
+        <button mat-icon-button class="close-button" (click)="closePreview()">
+          <mat-icon>close-button</mat-icon>
+        </button>
+        <div class="movie-poster">
+          <img [src]="moviepreview.posterUrl" alt="Movie Poster" />
+        </div>
+
+        <div class="movie-title">
+          <h2>{{ moviepreview.title }}</h2>
+        </div>
+
+        <div class="movie-plot">
+          <p>{{ moviepreview.plot }}</p>
+        </div>
+      </div>
+    </div>
   </div>
-  <app-preview-sidebar [movie]="selectedMovie"></app-preview-sidebar>
 </div>

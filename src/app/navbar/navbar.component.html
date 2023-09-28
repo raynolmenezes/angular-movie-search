@@ -2,24 +2,16 @@
   <span>Angular Movie Search</span>
   <div class="search-container">
     <input
-      id="global-search-movie"
+      id="search-input"
+      list="global-search-movie"
       placeholder="Search for Movies"
       [(ngModel)]="movietitle"
       (input)="onSearch($event)"
     />
-    <datalist
-      id="global-search-movie"
-      *ngIf="movies.length"
-    >
-      <option *ngFor="let movie of movies">
+    <datalist id="global-search-movie">
+      <option *ngFor="let movie of movies" [value]="movie.title">
         {{ movie.title }}
       </option>
     </datalist>
   </div>
 </mat-toolbar>
-
-<!-- <div *ngIf="movies.length" class="suggestions">
-  <div *ngFor="let movie of movies" class="suggestion-items">
-    {{ movie.title }}
-  </div>
-</div> -->
