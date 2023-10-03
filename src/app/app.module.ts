@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { OverlayModule } from "@angular/cdk/overlay";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatSelectModule } from "@angular/material/select";
 import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from "@angular/material/list";
@@ -23,7 +24,7 @@ import { MovieDetailComponent } from "./movie-detail/movie-detail.component";
 import { MovieComponent } from "./movie/movie.component";
 import { SortPipe } from "pipes/sort.pipe";
 import { FilterPipe } from "pipes/filter.pipe";
-import { PreviewSidebarComponent } from './preview-sidebar/preview-sidebar.component';
+import { PreviewSidebarComponent } from "./preview-sidebar/preview-sidebar.component";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { PreviewSidebarComponent } from './preview-sidebar/preview-sidebar.compo
     HttpClientModule,
     BrowserAnimationsModule,
     OverlayModule,
+    MatAutocompleteModule,
     MatSelectModule,
     MatFormFieldModule,
     MatInputModule,

@@ -4,10 +4,15 @@
       <mat-drawer #drawer class="sidenav" mode="side">
         <mat-label>Genres</mat-label>
         <mat-selection-list [multiple]="false" [(ngModel)]="selectedGenre">
-          <mat-list-option value="" selected="true">All</mat-list-option>
-          <mat-list-option *ngFor="let genre of genrelist" [value]="genre">{{
-            genre
-          }}</mat-list-option>
+          <mat-list-option value="" selected="true" checkboxPosition="before"
+            >All</mat-list-option
+          >
+          <mat-list-option
+            *ngFor="let genre of genrelist"
+            [value]="genre"
+            checkboxPosition="before"
+            >{{ genre }}</mat-list-option
+          >
         </mat-selection-list>
       </mat-drawer>
 
@@ -81,7 +86,7 @@
                 let i = index
               "
               [attr.data-index]="i"
-              (click)="moviepreview = movie"
+              (click)="moviepreview = movie; preview.toggle()"
             >
               <!-- <a class="movie-name" [routerLink]="str(movie.id)"> -->
               <a class="movie-name">
@@ -99,28 +104,39 @@
           </mat-list>
         </div>
       </div>
-    </mat-drawer-container>
-    <div #preview class="preview-sidebar" ngModel="moviepreview">
-      <div
-        *ngIf="moviepreview"
-        class="movie-preview"
-        (click)="$event.stopPropagation()"
+
+      <mat-drawer
+        #preview
+        class="preview-sidebar"
+        ngModel="moviepreview"
+        position="end"
+        mode="side"
       >
-        <button mat-icon-button class="close-button" (click)="closePreview()">
-          <mat-icon>close-button</mat-icon>
-        </button>
-        <div class="movie-poster">
-          <img [src]="moviepreview.posterUrl" alt="Movie Poster" />
-        </div>
+        <div
+          *ngIf="moviepreview"
+          class="movie-preview"
+          (click)="$event.stopPropagation()"
+        >
+          <button
+            mat-icon-button
+            class="close-button"
+            (click)="closePreview(); preview.toggle()"
+          >
+            <mat-icon>close-button</mat-icon>
+          </button>
+          <div class="movie-poster">
+            <img [src]="moviepreview.posterUrl" alt="Movie Poster" />
+          </div>
 
-        <div class="movie-title">
-          <h2>{{ moviepreview.title }}</h2>
-        </div>
+          <div class="movie-title">
+            <h2>{{ moviepreview.title }}</h2>
+          </div>
 
-        <div class="movie-plot">
-          <p>{{ moviepreview.plot }}</p>
+          <div class="movie-plot">
+            <p>{{ moviepreview.plot }}</p>
+          </div>
         </div>
-      </div>
-    </div>
+      </mat-drawer>
+    </mat-drawer-container>
   </div>
 </div>
