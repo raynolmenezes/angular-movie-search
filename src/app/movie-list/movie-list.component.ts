@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { MovieService } from "../movie.service";
-
 
 export interface Movie {
   id: number;
@@ -41,10 +40,11 @@ export class MovieListComponent implements OnInit {
     return arg0.toString();
   }
   @Input() moviepreview: Movie;
-  
 
   movietitle: string;
   movies: Movie[] = [];
+  moviesNumber: number = 12;
+  // movies: Movie[] = [];
   checkboxstate = false;
   runboxstate = false;
   selectedGenre: string[];
@@ -90,7 +90,9 @@ export class MovieListComponent implements OnInit {
   sortbyyear(checkboxstate) {
     this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
       if (checkboxstate) {
-        this.movies = data.sort((a, b) => a.year.localeCompare(b.year));
+        this.movies = data.sort((a, b) =>
+          a.year.localeCompare(b.year)
+        );
       } else {
         this.movies = data;
       }
@@ -109,5 +111,10 @@ export class MovieListComponent implements OnInit {
 
   ImgError(index: number) {
     this.movies.splice(index, 1);
+    // this.loadCurrentPage();
+  }
+
+  filteredMovies() {
+    return []
   }
 }

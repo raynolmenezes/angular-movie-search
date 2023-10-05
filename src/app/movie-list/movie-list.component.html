@@ -3,24 +3,41 @@
     <mat-drawer-container class="genre-container" autosize>
       <mat-drawer #drawer class="sidenav" mode="side">
         <mat-label>Genres</mat-label>
-        <mat-selection-list [multiple]="false" [(ngModel)]="selectedGenre">
-          <mat-list-option value="" selected="true" checkboxPosition="before"
+        <mat-selection-list
+          [multiple]="false"
+          [(ngModel)]="selectedGenre"
+          hideSingleSelectionIndicator
+        >
+          <mat-list-option class="selection-option" value="" selected="true"
             >All</mat-list-option
           >
           <mat-list-option
+            class="selection-option"
             *ngFor="let genre of genrelist"
             [value]="genre"
-            checkboxPosition="before"
             >{{ genre }}</mat-list-option
           >
         </mat-selection-list>
       </mat-drawer>
 
+      <div class="genre-sidenav-content-wrapper">
+        <div class="genre-sidenav-content">
+          <button
+            mat-mini-fab
+            class="mat-elevation-z0"
+            type="button"
+            (click)="drawer.toggle()"
+          >
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </button>
+        </div>
+      </div>
+
       <div class="movie-list-wrapper">
         <div class="movie-list">
           <div class="top-movie-screen-content">
             <div class="flex-search">
-              <mat-form-field appearance="fill" class="search-container">
+              <mat-form-field appearance="outline" class="search-container">
                 <mat-label>Search From Filtered Movies</mat-label>
                 <input
                   matInput
@@ -65,20 +82,6 @@
             </div>
           </div>
 
-          <div>
-            <div class="genre-sidenav-content">
-              <button
-                mat-mini-fab
-                class="mat-elevation-z0"
-                type="button"
-                (click)="drawer.toggle()"
-              >
-                >
-              </button>
-            </div>
-            <h1>Movies</h1>
-          </div>
-
           <mat-list class *ngIf="movies.length > 0">
             <mat-list-item
               *ngFor="
@@ -88,18 +91,23 @@
               [attr.data-index]="i"
               (click)="moviepreview = movie; preview.toggle()"
             >
-              <!-- <a class="movie-name" [routerLink]="str(movie.id)"> -->
-              <a class="movie-name">
-                <div class="movie-item">
+              <div class="movie-item">
+                <div class="movie-image">
                   <img
                     mat-card-image
                     [src]="movie.posterUrl"
                     (error)="ImgError(i)"
                   />
-                  <p mat-line>{{ movie.title }}</p>
-                  <p mat-line class="release-year">{{ movie.year }}</p>
                 </div>
-              </a>
+                <div class="movie-content">
+                  <p mat-line class="title">
+                    <mat-icon>movie</mat-icon> {{ movie.title }}
+                  </p>
+                  <p mat-line>
+                    <mat-icon>access_time</mat-icon> {{ movie.year }}
+                  </p>
+                </div>
+              </div>
             </mat-list-item>
           </mat-list>
         </div>
