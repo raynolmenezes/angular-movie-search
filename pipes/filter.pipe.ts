@@ -5,18 +5,18 @@ import { Movie } from "src/app/movie-list/movie-list.component";
   name: "filter",
 })
 export class FilterPipe implements PipeTransform {
-  transform(movies: Movie[], filter: { genres: string[] }): Movie[] {
+  transform(movies: Movie[], genrefilter: { genres: string[] }): Movie[] {
     if (
       !movies ||
-      !filter ||
-      !filter.genres ||
-      filter.genres.length == 0 ||
-      filter.genres.includes("")
+      !genrefilter ||
+      !genrefilter.genres ||
+      genrefilter.genres.length == 0 ||
+      genrefilter.genres.includes("")
     ) {
       return movies;
     }
     return movies.filter((movie) =>
-      movie.genres.some((genre) => filter.genres.includes(genre))
+      movie.genres.some((genre) => genrefilter.genres.includes(genre))
     );
   }
 }

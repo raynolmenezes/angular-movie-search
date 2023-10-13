@@ -13,23 +13,6 @@ export interface Movie {
   posterUrl: string;
 }
 
-export interface MovieTMDB {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
-
 @Component({
   selector: "app-movie-list",
   templateUrl: "./movie-list.component.html",
@@ -41,23 +24,33 @@ export class MovieListComponent implements OnInit {
   }
   @Input() moviepreview: Movie;
 
+  allMoviesCache: Movie[];
+
   movietitle: string;
   movies: Movie[] = [];
   moviesNumber: number = 12;
-  // movies: Movie[] = [];
   checkboxstate = false;
   runboxstate = false;
   selectedGenre: string[];
   genrelist: string[];
   isFilterOpen: boolean = false;
   selectedMovie: Movie;
+  currentPage: number = 1;
+  limit: number = 12;
+  sidebar_icon = "keyboard_arrow_right";
+
+  changeSidebarIcon() {
+    if (this.sidebar_icon === "keyboard_arrow_right") {
+      this.sidebar_icon = "keyboard_arrow_left";
+    } else {
+      this.sidebar_icon = "keyboard_arrow_right";
+    }
+  }
 
   constructor(private movieService: MovieService) {}
 
   ngOnInit(): void {
-    this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
-      this.movies = data;
-    });
+    this.loadMovies();
     this.movieService.getGenresfromHttp().subscribe((data: string[]) => {
       this.genrelist = data;
     });
@@ -68,53 +61,66 @@ export class MovieListComponent implements OnInit {
   }
 
   Search(): void {
-    if (this.movietitle != "") {
-      this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
-        this.movies = data.filter((movie) =>
-          movie.title.toLowerCase().includes(this.movietitle.toLowerCase())
-        );
-      });
-      this.movieService.getGenresfromHttp().subscribe((data: string[]) => {
-        this.genrelist = data;
-      });
-    } else {
-      this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
-        this.movies = data;
-      });
-      this.movieService.getGenresfromHttp().subscribe((data: string[]) => {
-        this.genrelist = data;
-      });
-    }
-  }
-
-  sortbyyear(checkboxstate) {
-    this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
-      if (checkboxstate) {
-        this.movies = data.sort((a, b) =>
-          a.year.localeCompare(b.year)
-        );
-      } else {
-        this.movies = data;
-      }
-    });
-  }
-
-  runtime15(runboxstate) {
-    this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
-      if (runboxstate) {
-        this.movies = data.filter((movie) => movie.runtime > "150");
-      } else {
-        this.movies = data;
-      }
-    });
+    this.movies = [];
+    this.currentPage = 1;
+    this.loadMovies();
   }
 
   ImgError(index: number) {
     this.movies.splice(index, 1);
-    // this.loadCurrentPage();
   }
 
-  filteredMovies() {
-    return []
+  loadMovies(): void {
+    if (!this.allMoviesCache) {
+      this.movieService.getMoviesfromHttp().subscribe((data: Movie[]) => {
+        this.allMoviesCache = data;
+        this.processMovies();
+      });
+    } else {
+      this.processMovies();
+    }
+  }
+
+  processMovies(): void {
+    let filteredMovies = [...this.allMoviesCache];
+
+    if (this.checkboxstate) {
+      filteredMovies.sort((a, b) => a.year.localeCompare(b.year));
+    }
+    if (this.runboxstate) {
+      filteredMovies = filteredMovies.filter(
+        (movie) => Number(movie.runtime) <= 150
+      );
+    }
+    if (this.movietitle) {
+      filteredMovies = filteredMovies.filter((movie) =>
+        movie.title.toLowerCase().includes(this.movietitle.toLowerCase())
+      );
+    }
+
+    const startIndex = (this.currentPage - 1) * this.limit;
+    const endIndex = this.currentPage * this.limit;
+
+    this.movies = [
+      ...this.movies,
+      ...filteredMovies.slice(startIndex, endIndex),
+    ];
+    this.currentPage++;
+  }
+
+  sortbyyear() {
+    this.movies = [];
+    this.currentPage = 1;
+    this.loadMovies();
+  }
+
+  runtime15() {
+    this.movies = [];
+    this.currentPage = 1;
+    this.loadMovies();
+  }
+
+  onScroll(event: any): void {
+    this.loadMovies();
   }
 }

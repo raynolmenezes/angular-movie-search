@@ -26,14 +26,20 @@
             mat-mini-fab
             class="mat-elevation-z0"
             type="button"
-            (click)="drawer.toggle()"
+            (click)="drawer.toggle(); changeSidebarIcon()"
           >
-            <mat-icon>keyboard_arrow_right</mat-icon>
+            <mat-icon>{{ sidebar_icon }}</mat-icon>
           </button>
         </div>
       </div>
 
-      <div class="movie-list-wrapper">
+      <div
+        class="movie-list-wrapper"
+        infinite-scroll
+        [infiniteScrollDistance]="2"
+        [scrollWindow]="false"
+        (scrolled)="onScroll($event)"
+      >
         <div class="movie-list">
           <div class="top-movie-screen-content">
             <div class="flex-search">
@@ -52,10 +58,11 @@
                 mat-button
                 (click)="isFilterOpen = !isFilterOpen"
                 type="button"
+                class="filter-button"
                 cdkOverlayOrigin
                 #trigger="cdkOverlayOrigin"
               >
-                <mat-icon fontIcon="filter_alt"></mat-icon>
+                <mat-icon>filter_alt</mat-icon>
               </button>
               <ng-template
                 cdkConnectedOverlay
@@ -66,14 +73,14 @@
                   <li>
                     <mat-checkbox
                       [(ngModel)]="checkboxstate"
-                      (change)="sortbyyear(checkboxstate)"
+                      (change)="sortbyyear()"
                       >Sort By Year</mat-checkbox
                     >
                   </li>
                   <li>
                     <mat-checkbox
                       [(ngModel)]="runboxstate"
-                      (change)="runtime15(runboxstate)"
+                      (change)="runtime15()"
                       >Remove Movies over 150 Mins Runtime</mat-checkbox
                     >
                   </li>
@@ -81,7 +88,6 @@
               </ng-template>
             </div>
           </div>
-
           <mat-list class *ngIf="movies.length > 0">
             <mat-list-item
               *ngFor="
@@ -92,16 +98,18 @@
               (click)="moviepreview = movie; preview.toggle()"
             >
               <div class="movie-item">
-                <div class="movie-image">
+                <div class="movie-image-container">
                   <img
                     mat-card-image
                     [src]="movie.posterUrl"
                     (error)="ImgError(i)"
+                    onerror="ImgError(i)"
                   />
                 </div>
                 <div class="movie-content">
                   <p mat-line class="title">
-                    <mat-icon>movie</mat-icon> {{ movie.title }}
+                    <mat-icon>movie</mat-icon>
+                    <span maxlength="50">{{ movie.title }}</span>
                   </p>
                   <p mat-line>
                     <mat-icon>access_time</mat-icon> {{ movie.year }}
